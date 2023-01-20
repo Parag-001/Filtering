@@ -9,7 +9,7 @@ const FetchId = () => {
       {data.slice(0, 10).map((cur) => {
         return (
           <div key={cur.id}>
-            <h3>{cur.title}</h3>
+            <h3>{cur.id}</h3>
           </div>
         );
       })}
