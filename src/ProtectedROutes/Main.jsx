@@ -30,6 +30,11 @@ const Main = () => {
               FetchId
             </NavLink>
           </li>
+          <li>
+            <NavLink className="navlinks" to="/crud">
+              Crud
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </>
