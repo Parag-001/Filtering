@@ -1,30 +1,29 @@
 import React from "react";
 
-const Form = ({ serchData, serch, serching }) => {
+const Form = ({ serchData, serch, serching, data }) => {
   const findData = serching.length > 0 ? serch : serchData;
+  let key;
+  data.forEach((cur) => {
+    key = Object.keys(cur);
+  });
+  let newkey = [...new Set(key)];
   return (
     <>
       <table className="table  container main-form">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>NAME</th>
-            <th>CITY</th>
-            <th>CATEGORY</th>
-            <th>TYPE</th>
-            <th>ACTIVE</th>
+            {newkey.map((cur, ind) => {
+              return <td key={ind}>{cur}</td>;
+            })}
           </tr>
         </thead>
         <tbody id="tbody">
           {findData.map((cur) => {
             return (
               <tr key={cur.id}>
-                <td>{cur.id}</td>
-                <td>{cur.name}</td>
-                <td>{cur.city}</td>
-                <td>{cur.category}</td>
-                <td>{cur.type}</td>
-                <td>{cur.active}</td>
+                {newkey.map((data, ind) => {
+                  return <td key={ind}>{cur[data]}</td>;
+                })}
               </tr>
             );
           })}

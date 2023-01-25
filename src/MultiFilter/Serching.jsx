@@ -37,6 +37,26 @@ const Serching = () => {
       active: "FALSE",
     },
   ];
+  // const data = [
+  //   {
+  //     id: 1,
+  //     name: "Rohit",
+  //     college: "Sutex",
+  //     year: "FY",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Raaj",
+  //     college: "Mahavir",
+  //     year: "TY",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Virat",
+  //     college: "ABC",
+  //     year: "SY",
+  //   },
+  // ];
   const [serch, setSerch] = useState("");
   const [serchData, setSerchData] = useState(data);
   const [searchNewData, setSearchNewData] = useState("");
@@ -45,52 +65,43 @@ const Serching = () => {
   let key;
   data.forEach((cur) => {
     key = Object.keys(cur);
-    key.shift();
-    key.shift();
   });
   let newkey = [...new Set(key)];
 
   const unique = (data, val) => {
-    const newval = data.map((cur) => {
+    const newVal = data.map((cur) => {
       return cur[val];
     });
-    return [...new Set(newval)];
+    return [...new Set(newVal)];
   };
-  const city = unique(data, "city");
-  const category = unique(data, "category");
-  const type = unique(data, "type");
-  const active = unique(data, "active");
+  let ob = {};
+  newkey.slice(2).map((cur) => {
+    return (ob = { ...ob, [cur]: unique(data, [cur]) });
+  });
 
-  const findData = (data, temp) => {
-    for (var i = 0; i <= data.length - 1; i++) {
-      if (temp.includes(data[i])) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const handleChange = (e) => {
+  const handleChange = (e, cat) => {
     let value = e.target.value;
     let check = e.target.checked;
 
     const ind = allData.findIndex((cur) => {
       return cur === value;
     });
+
     let find = ind === -1 ? [...allData] : allData.splice(ind, 1);
+
     const temp = check ? [...allData, value] : [...allData];
     setAllData(temp);
+
     const fnfilter = data.filter((cur) => {
-      if (
-        (!findData(city, temp) || temp.includes(cur.city)) &&
-        (!findData(category, temp) || temp.includes(cur.category)) &&
-        (!findData(type, temp) || temp.includes(cur.type)) &&
-        (!findData(active, temp) || temp.includes(cur.active))
-      ) {
-        return cur;
+      for (key of Object.keys(cur)) {
+        if (temp.includes(cur[key])) {
+          return cur;
+        }
       }
+      return null;
     });
-    setSerchData(fnfilter);
+    console.log("fnfilter", fnfilter);
+    temp.length > 0 ? setSerchData(fnfilter) : setSerchData(data);
   };
 
   const search = (e) => {
@@ -99,21 +110,14 @@ const Serching = () => {
       if (cur.name.toLowerCase().includes(e.target.value.toLowerCase())) {
         return cur;
       }
+      return null;
     });
     setSearchNewData(val);
   };
   return (
     <>
       <div className="main-div container mt-2">
-        {newkey.map((cur) => {
-          const findValues =
-            cur === "city"
-              ? city
-              : cur === "category"
-              ? category
-              : cur === "type"
-              ? type
-              : active;
+        {newkey.slice(2).map((cur) => {
           return (
             <React.Fragment key={cur}>
               <div className="div-city">
@@ -121,7 +125,7 @@ const Serching = () => {
                   <h3>{cur}</h3>
                 </div>
                 <div>
-                  {findValues.map((val, ind) => {
+                  {ob[cur].map((val, ind) => {
                     return (
                       <div className="all-city" key={ind}>
                         <label className="switch">
@@ -129,7 +133,7 @@ const Serching = () => {
                             type="checkbox"
                             name={val}
                             value={val}
-                            onChange={handleChange}
+                            onChange={(e) => handleChange(e, cur)}
                           />
                           <div></div>
                         </label>
