@@ -74,6 +74,14 @@ const Serching = () => {
     });
     return [...new Set(newVal)];
   };
+  const findData = (data, temp, val) => {
+    for (var i = 0; i <= data.length - 1; i++) {
+      if (temp.includes(data[i][val])) {
+        return true;
+      }
+    }
+    return false;
+  };
   let ob = {};
   newkey.slice(2).map((cur) => {
     return (ob = { ...ob, [cur]: unique(data, [cur]) });
@@ -93,15 +101,11 @@ const Serching = () => {
     setAllData(temp);
 
     const fnfilter = data.filter((cur) => {
-      for (key of Object.keys(cur)) {
-        if (temp.includes(cur[key])) {
-          return cur;
-        }
-      }
-      return null;
+      return newkey.every(
+        (i) => !findData(data, temp, i) || temp.includes(cur[i])
+      );
     });
-    console.log("fnfilter", fnfilter);
-    temp.length > 0 ? setSerchData(fnfilter) : setSerchData(data);
+    setSerchData(fnfilter);
   };
 
   const search = (e) => {
