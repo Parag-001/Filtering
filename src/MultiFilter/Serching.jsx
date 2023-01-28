@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Form from "./Table";
 
 const Serching = () => {
@@ -37,36 +37,23 @@ const Serching = () => {
       active: "FALSE",
     },
   ];
-  // const data = [
-  //   {
-  //     id: 1,
-  //     name: "Rohit",
-  //     college: "Sutex",
-  //     year: "FY",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Raaj",
-  //     college: "Mahavir",
-  //     year: "TY",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Virat",
-  //     college: "ABC",
-  //     year: "SY",
-  //   },
-  // ];
   const [serch, setSerch] = useState("");
   const [serchData, setSerchData] = useState(data);
   const [searchNewData, setSearchNewData] = useState("");
   const [allData, setAllData] = useState([]);
+  const [newkey, setNewKey] = useState([]);
 
-  let key;
-  data.forEach((cur) => {
-    key = Object.keys(cur);
-  });
-  let newkey = [...new Set(key)];
+  useEffect(() => {
+    let key = [];
+    data.forEach((cur) => {
+      Object.keys(cur).forEach((i) => {
+        if (!key.includes(i)) {
+          key.push(i);
+        }
+      });
+    });
+    setNewKey(key);
+  }, []);
 
   const unique = (data, val) => {
     const newVal = data.map((cur) => {
@@ -74,6 +61,7 @@ const Serching = () => {
     });
     return [...new Set(newVal)];
   };
+
   const findData = (data, temp, val) => {
     for (var i = 0; i <= data.length - 1; i++) {
       if (temp.includes(data[i][val])) {
@@ -82,12 +70,13 @@ const Serching = () => {
     }
     return false;
   };
+
   let ob = {};
   newkey.slice(2).map((cur) => {
     return (ob = { ...ob, [cur]: unique(data, [cur]) });
   });
 
-  const handleChange = (e, cat) => {
+  const handleChange = (e) => {
     let value = e.target.value;
     let check = e.target.checked;
 
@@ -137,7 +126,7 @@ const Serching = () => {
                             type="checkbox"
                             name={val}
                             value={val}
-                            onChange={(e) => handleChange(e, cur)}
+                            onChange={handleChange}
                           />
                           <div></div>
                         </label>

@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Form = ({ serchData, serch, serching, data }) => {
+  const [newkey, setNewKey] = useState([]);
   const findData = serching.length > 0 ? serch : serchData;
-  let key;
-  data.forEach((cur) => {
-    key = Object.keys(cur);
-  });
-  let newkey = [...new Set(key)];
+
+  useEffect(() => {
+    let key = [];
+    data.forEach((cur) => {
+      Object.keys(cur).forEach((i) => {
+        if (!key.includes(i)) {
+          key.push(i);
+        }
+      });
+    });
+    setNewKey(key);
+  }, []);
   return (
     <>
       <table className="table  container main-form">
